@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GATEWAY 404 - RESTRICTED</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nosifer&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #050000;
+            color: #ff0000;
+            font-family: 'Share Tech Mono', monospace;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-image: radial-gradient(circle, transparent 40%, #4a0000 90%, #200000 100%);
+            animation: blood-pulse 4s infinite alternate;
+        }
+
+        .login-container {
+            border: 1px solid #330000;
+            padding: 40px;
+            width: 400px;
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 30px #500000;
+            text-align: center;
+            position: relative;
+            z-index: 10; /* Ensures container is above background */
+        }
+
+        /* --- THE FIX IS HERE --- */
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-top: 5px solid #8a0303;
+            filter: drop-shadow(0 5px 5px red);
+            
+            /* This allows you to click THROUGH the decoration */
+            pointer-events: none; 
+            z-index: 100;
+        }
+
+        h1 {
+            font-family: 'Nosifer', cursive;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #cc0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        .status-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 30px;
+            text-align: left;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 10px;
+        }
+
+        .status-text span {
+            color: #0f0; 
+        }
+
+        input[type="password"] {
+            background: black;
+            border: none;
+            border-bottom: 2px solid #500;
+            width: 80%;
+            padding: 10px;
+            color: red;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.5rem;
+            text-align: center;
+            outline: none;
+            letter-spacing: 5px;
+            transition: 0.3s;
+            position: relative; 
+            z-index: 20; /* Ensures input is clickable */
+        }
+
+        input[type="password"]:focus {
+            border-bottom: 2px solid red;
+            box-shadow: 0 10px 20px -10px rgba(255, 0, 0, 0.5);
+        }
+
+        button {
+            margin-top: 30px;
+            background: #200;
+            color: red;
+            border: 1px solid red;
+            padding: 10px 30px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 20; /* Ensures button is clickable */
+        }
+
+        button:hover {
+            background: red;
+            color: black;
+            box-shadow: 0 0 15px red;
+        }
+
+        #error-msg {
+            color: red;
+            margin-top: 20px;
+            font-weight: bold;
+            display: none;
+            text-shadow: 0 0 5px red;
+        }
+
+        @keyframes blood-pulse {
+            0% { box-shadow: inset 0 0 50px #300; }
+            100% { box-shadow: inset 0 0 150px #600; }
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+
+        .shake-anim {
+            animation: shake 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container" id="loginBox">
+        <h1>DARK WEB<br>GATEWAY</h1>
+        
+        <div class="status-text">
+            > ENCRYPTION: <span style="color:rgb(255, 0, 0)">Danger</span><br>
+            > IP TRACE: <span>ACTIVE</span><br>
+            > USER: ANONYMOUS
+        </div>
+
+        <input type="password" id="passInput" placeholder="ENTER KEY" autocomplete="off">
+        <br>
+        <button id="accessBtn">ACCESS</button>
+
+        <div id="error-msg">ACCESS DENIED. IP LOGGED.</div>
+    </div>
+
+    <script>
+        // === SETTINGS ===
+        const CORRECT_PASSWORD = "666"; 
+        const REDIRECT_URL = "danger.html"; 
+        // ===============
+
+        const inputField = document.getElementById("passInput");
+        const btn = document.getElementById("accessBtn");
+
+        // Function to run the logic
+        function checkPassword() {
+            const val = inputField.value;
+            const errorMsg = document.getElementById("error-msg");
+            const box = document.getElementById("loginBox");
+
+            if (val === CORRECT_PASSWORD) {
+                // Success
+                errorMsg.style.display = "block";
+                errorMsg.style.color = "#0f0";
+                errorMsg.innerHTML = "ACCESS GRANTED. CONNECTING...";
+                
+                setTimeout(() => {
+                    window.location.href = REDIRECT_URL;
+                }, 1000);
+            } else {
+                // Fail
+                errorMsg.style.display = "block";
+                errorMsg.style.color = "red";
+                errorMsg.innerHTML = "ACCESS DENIED. IP LOGGED.";
+                inputField.value = "";
+                
+                // Trigger Shake
+                box.classList.remove("shake-anim"); // Reset animation
+                void box.offsetWidth; // Force reflow (magic trick to restart css animation)
+                box.classList.add("shake-anim");
+            }
+        }
+
+        // Click Listener
+        btn.addEventListener("click", checkPassword);
+
+        // Enter Key Listener
+        inputField.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                checkPassword();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Morning Ritual - Lifestyle Blog</title>
+    <style>
+        /* --- GLOBAL & FONTS --- */
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&family=VT323&display=swap');
+        
+        body { margin: 0; padding: 0; overflow-x: hidden; background: #fafafa; font-family: 'Georgia', serif; transition: background 0.1s; }
+        
+        /* === STAGE 1: THE TRAP (CLEAN BLOG) === */
+        #normal-layer { 
+            max-width: 800px; margin: 0 auto; background: #fff; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; padding: 40px; 
+            transition: filter 0.2s; 
+        }
+        
+        .nav { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 40px; font-family: 'Arial', sans-serif; font-size: 0.8rem; letter-spacing: 1px; color: #888; text-transform: uppercase; }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; font-weight: normal; color: #111; }
+        .meta { color: #999; font-style: italic; font-size: 0.9rem; margin-bottom: 30px; }
+        .hero-img { 
+            width: 100%; height: 350px; background-color: #e0e0e0; margin-bottom: 30px; 
+            display: flex; align-items: center; justify-content: center; color: #fff; 
+            font-size: 1.5rem; letter-spacing: 2px; 
+            background-image: url(https://images5.alphacoders.com/835/835260.jpg);
+            background-size: cover;
+            background-position: center;
+        }
+        p { line-height: 1.8; color: #444; font-size: 1.1rem; margin-bottom: 20px; }
+        .read-more-btn { background: #000; color: #fff; padding: 15px 30px; border: none; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; cursor: pointer; transition: 0.3s; margin-top: 20px;}
+        .read-more-btn:hover { letter-spacing: 3px; background: #cc0000; }
+
+        /* === STAGE 2: THE NIGHTMARE === */
+        #horror-layer {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; color: #ff0000; font-family: 'Special Elite', monospace; z-index: 10;
+            overflow: hidden;
+        }
+
+        /* BLUE DEATH SCREEN LAYER */
+        #bsod-layer {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #0000aa; color: #fff; font-family: 'VT323', monospace; 
+            z-index: 200; padding: 50px; box-sizing: border-box; text-align: center;
+        }
+        
+        .bsod-title { font-size: 4rem; margin-top: 100px; text-shadow: 2px 2px #000; }
+        .bsod-text { font-size: 2rem; margin-top: 20px; opacity: 0; }
+
+        /* FINAL TRAP LAYER */
+        #final-trap-layer {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; z-index: 300; display: flex; align-items: center; justify-content: center; flex-direction: column;
+        }
+        
+        .bloody-text {
+            font-family: 'Creepster', cursive; color: #8a0000; font-size: 3rem;
+            text-shadow: 0 0 10px red; animation: pulse 2s infinite; display: none;
+        }
+
+        .fake-browser {
+            width: 80%; height: 70%; background: #fff; border: 5px solid #555;
+            box-shadow: 0 0 100px red; display: none; position: relative;
+        }
+        .browser-bar {
+            width: 100%; height: 30px; background: #ccc; border-bottom: 2px solid #999;
+            display: flex; align-items: center; padding-left: 10px; font-family: sans-serif; font-size: 12px;
+        }
+        .browser-content {
+            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+            background: #000; color: red; font-family: 'Special Elite', monospace; font-size: 4rem;
+            flex-direction: column;
+        }
+
+        /* SECRET REVEAL BUTTON */
+        .secret-btn {
+            margin-top: 50px;
+            color: #1a1a1a; /* Almost invisible dark grey */
+            text-decoration: none;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.5s;
+        }
+        .secret-btn:hover {
+            color: #ff0000; /* Reveals on hover */
+        }
+
+        /* SCENE ELEMENTS */
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%; pointer-events: none; z-index: 9999;
+        }
+
+        .ritual-container {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 80vmin; height: 80vmin; opacity: 0.4; pointer-events: none;
+            animation: spin-slow 10s linear infinite;
+        }
+        
+        .pentagram {
+            width: 100%; height: 100%; border: 5px solid #8a0000; border-radius: 50%;
+            position: relative; box-shadow: 0 0 50px #8a0000, inset 0 0 50px #8a0000;
+        }
+        
+        .pentagram::before {
+            content: "⛧"; font-size: 30rem; color: #8a0000;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -53%);
+            text-shadow: 0 0 20px red;
+        }
+
+        .terminal-text { position: absolute; top: 20px; left: 20px; font-size: 1.2rem; color: #0f0; text-shadow: 0 0 5px #0f0; }
+
+        #discord-popup {
+            display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 500px; background: #000; border: 2px solid #ff0000; padding: 25px;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.6); z-index: 50; text-align: left;
+        }
+        
+        .cmd-line { color: #00ff00; margin: 8px 0; font-size: 0.95rem; }
+        .cmd-danger { color: #ff0000; font-weight: bold; text-shadow: 0 0 10px red; font-size: 1.2rem; }
+        .cmd-reveal { color: #00ffff; font-weight: bold; font-size: 1.5rem; animation: glitch-anim 0.2s infinite; }
+
+        /* JUMPSCARES */
+        .scare-img {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: 1000; mix-blend-mode: normal;
+        }
+
+        /* ANIMATIONS */
+        @keyframes spin-slow { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes glitch-anim {
+            0% { transform: translate(0) skew(0deg); }
+            20% { transform: translate(-5px, 5px) skew(10deg); filter: hue-rotate(90deg); }
+            40% { transform: translate(5px, -5px) skew(-10deg); }
+            60% { transform: translate(-5px, 0) skew(5deg); filter: invert(1); }
+            100% { transform: translate(0) skew(0deg); }
+        }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; text-shadow: 0 0 20px red; } 100% { opacity: 0.5; } }
+        @keyframes violent-shake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-15px, 15px) rotate(-2deg); }
+            50% { transform: translate(15px, -15px) rotate(2deg); }
+            75% { transform: translate(-15px, -15px) rotate(-2deg); }
+            100% { transform: translate(15px, 15px) rotate(2deg); }
+        }
+        .shaking { animation: violent-shake 0.1s infinite; }
+        .glitch-div { animation: glitch-anim 0.2s infinite; }
+    </style>
+</head>
+<body>
+
+    <div id="normal-layer">
+    <div class="nav">
+        <span>Home</span>
+        <span>Technology</span>
+        <span>Privacy</span>
+        <span>About</span>
+    </div>
+
+    <h1>The Dark Web: What You Were Never Meant to See</h1>
+
+    <div class="meta">Posted by Anonymous • 7 min read</div>
+
+    <div class="hero-img">ACCESS</div>
+
+    <p>
+        Most of the internet is familiar. Search engines. Social media. News.
+        But what you see is only the surface.
+    </p>
+
+    <p>
+        Beneath it lies something older, quieter, and far less forgiving.
+        A place not indexed. Not advertised. Not monitored the way you think.
+    </p>
+
+    <p>
+        The dark web is not a website.
+        It is a shadow — formed where curiosity meets anonymity.
+    </p>
+
+    <p>
+        People say it’s full of myths. Others say it’s full of monsters.
+        The truth is simpler.
+        It is full of <em>people</em>.
+    </p>
+
+    <p>
+        Some are hiding.
+        Some are searching.
+        Some are watching.
+    </p>
+
+    <p>
+        Every click leaves a trace.
+        Every visit is remembered by someone — even when you think it isn’t.
+    </p>
+
+    <p>
+        You didn’t reach this page by accident.
+        You followed something.
+        Or something followed you.
+    </p>
+
+    <p>
+        Are you curious because you want knowledge?
+        Or because part of you enjoys the risk?
+    </p>
+
+    <p>
+        The deeper you scroll, the quieter it becomes.
+        Silence here does not mean safety.
+    </p>
+
+    <p>
+        Take a moment.
+        Look around your room.
+        Make sure you’re alone.
+    </p>
+
+    <p>
+        Still want to continue?
+    </p>
+
+    <button class="read-more-btn" onclick="forceStart()">Read Full Article</button>
+
+    <p style="margin-top: 50px; color: #111;">.</p>
+</div>
+
+
+    <div id="horror-layer">
+        <div class="scanlines"></div>
+        <div class="ritual-container"><div class="pentagram"></div></div>
+        <div class="terminal-text" id="log-output">
+            > SYSTEM_COMPROMISED<br>> BYPASSING_FIREWALL... [SUCCESS]
+        </div>
+
+        <div id="discord-popup">
+            <div class="cmd-line">> INITIATING PROTOCOL 666...</div>
+            <div class="cmd-line" id="disc-1" style="display:none;">> SCANNING SERVER MEMBERS...</div>
+            <div class="cmd-line" id="disc-2" style="display:none;">> ENTITY DETECTED: <span style="color:white; font-weight:bold;">Non Framed Human</span></div>
+            <div class="cmd-danger" id="disc-3" style="display:none; margin-top:20px;">
+                ☠ TARGET LOCKED ☠<br>ALIAS: SYSTEM<br>DECRYPTING IDENTITY...
+            </div>
+            <div class="cmd-reveal" id="disc-4" style="display:none; margin-top:10px;">> NAME LEAKED | Location Traced</div>
+        </div>
+    </div>
+
+    <div id="bsod-layer" style="display: none;">
+        <div class="scanlines"></div>
+        <div class="bsod-title" id="bsod-1">FATAL_SYSTEM_ERROR</div>
+        <div class="bsod-text" id="bsod-2">TIME ENDED</div>
+        <div class="bsod-text" id="bsod-3">YOU HAVE BEEN CAPTURED<br>Death Is Near</div>
+        <div class="bsod-text" id="bsod-4" style="color: yellow; font-weight: bold; font-size: 3rem;">YOUR IP: <span id="user-ip">FETCHING...</span></div>
+    </div>
+
+    <div id="final-trap-layer" style="display: none;">
+        <div class="scanlines"></div>
+        <div class="bloody-text" id="bloody-msg">Redirecting to a safe place...</div>
+        
+        <div class="fake-browser" id="browser-window">
+            <div class="browser-bar">🔴 🟡 🟢 &nbsp; Unknown Browser - Privacy Mode: OFF</div>
+            <div class="browser-content">
+                <div>YOU ARE TRAPPED</div>
+
+                <div style="font-size: 1.5rem; margin-top:20px; color: #fff;">SESSION LOCKED PERMANENTLY</div>
+                
+                <a href="reveal.html" class="secret-btn">???</a>
+            </div>
+        </div>
+    </div>
+
+    <img id="x1" src="x1.jpg" class="scare-img"> 
+    <img id="x2" src="x2.jpg" class="scare-img"> 
+    <img id="x3" src="x3.jpg" class="scare-img"> 
+    <img id="x4" src="x4.jpg" class="scare-img"> 
+    
+    <script>
+        // --- CONFIGURATION ---
+        const redirectURL = "./screen.html"; // CHANGE THIS TO YOUR URL
+
+        // --- AUDIO SYSTEM (WITH VOLUME BOOST) ---
+        const audioAmbience = new Audio('ambience.mp3'); audioAmbience.loop = true;
+        const audioScream1 = new Audio('s1.mp3'); 
+        const audioScream2 = new Audio('s2.mp3');
+        const audioStatic = new Audio('s3.mp3'); audioStatic.loop = true; 
+        const audioFinalScream = new Audio('s4.mp3');
+
+        // Create the Audio Context for amplification
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Helper Function to Amplify Audio
+        function boostAudio(audioElem, multiplier) {
+            // We create a source from the audio element
+            const source = audioCtx.createMediaElementSource(audioElem);
+            // We create a "GainNode" (Amplifier)
+            const gainNode = audioCtx.createGain();
+            
+            gainNode.gain.value = multiplier; // e.g. 5.0 = 500% Volume
+            
+            // Connect: Source -> Amplifier -> Speakers
+            source.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+        }
+
+        // --- APPLYING THE BOOSTS ---
+        // Warning: These values are very loud
+        boostAudio(audioAmbience, 1.0);  // Normal
+        boostAudio(audioScream1, 5.0);   // 500% VOLUME
+        boostAudio(audioScream2, 5.0);   // 500% VOLUME
+        boostAudio(audioStatic, 2.0);    // 200% VOLUME
+        boostAudio(audioFinalScream, 8.0); // 800% VOLUME (EXTREME)
+
+        // IP HOLDER
+        let publicIP = "192.168.1.666"; 
+
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => { publicIP = data.ip; })
+            .catch(error => { console.log("IP Blocked"); });
+
+        let hasStarted = false;
+        
+        function unlockAudio() {
+            // We must resume the AudioContext because browsers suspend it until clicked
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            [audioAmbience, audioScream1, audioScream2, audioStatic, audioFinalScream].forEach(audio => {
+                audio.play().catch(() => {}); 
+                audio.pause(); 
+                audio.currentTime = 0; 
+            });
+        }
+
+        function forceStart() {
+            if(hasStarted) return;
+            hasStarted = true;
+            
+            unlockAudio();
+
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) elem.requestFullscreen();
+            
+            initNightmare();
+        }
+
+        function initNightmare() {
+            const body = document.body;
+            document.getElementById('normal-layer').style.filter = "invert(1)";
+            setTimeout(() => {
+                document.getElementById('normal-layer').style.display = 'none';
+                document.getElementById('horror-layer').style.display = 'block';
+                body.style.backgroundColor = '#000';
+                audioAmbience.play();
+
+                triggerJump('x1', audioScream1);
+
+                setTimeout(runDiscordSequence, 2000);
+            }, 200);
+        }
+
+        function runDiscordSequence() {
+            const popup = document.getElementById('discord-popup');
+            popup.style.display = 'block';
+
+            setTimeout(() => { document.getElementById('disc-1').style.display = 'block'; }, 1000);
+            setTimeout(() => { document.getElementById('disc-2').style.display = 'block'; }, 2000);
+            setTimeout(() => { 
+                document.getElementById('disc-3').style.display = 'block'; 
+                popup.style.borderColor = "red";
+                document.body.classList.add('shaking'); 
+            }, 4000);
+
+            setTimeout(() => { 
+                document.getElementById('disc-4').style.display = 'block';
+                audioStatic.play(); 
+            }, 6000);
+
+            setTimeout(() => {
+                triggerJump('x2', audioScream2);
+                setTimeout(triggerBlueDeath, 500); 
+            }, 7500);
+        }
+
+        function triggerBlueDeath() {
+            document.body.classList.remove('shaking');
+            document.getElementById('horror-layer').style.display = 'none';
+            document.getElementById('x1').style.display = 'none'; 
+            document.getElementById('x2').style.display = 'none'; 
+
+            triggerJump('x3', audioScream1);
+
+            const bsod = document.getElementById('bsod-layer');
+            bsod.style.display = 'block';
+            
+            document.getElementById('user-ip').innerText = publicIP;
+
+            setTimeout(() => { document.getElementById('bsod-2').style.opacity = 1; }, 1000); 
+            setTimeout(() => { document.getElementById('bsod-3').style.opacity = 1; }, 2500); 
+            setTimeout(() => { document.getElementById('bsod-4').style.opacity = 1; }, 4000); 
+
+            setTimeout(blackoutSequence, 6000);
+        }
+
+        function blackoutSequence() {
+            document.getElementById('bsod-layer').style.display = 'none';
+            document.body.style.background = "#000";
+            audioAmbience.pause();
+            audioStatic.pause();
+
+            setTimeout(() => {
+                const img = document.getElementById('x4');
+                img.style.display = 'block';
+                audioFinalScream.volume = 1.0; 
+                audioFinalScream.play();
+
+                document.body.classList.add('shaking');
+
+                setTimeout(() => {
+                    img.style.display = 'none';
+                    showBloodyRedirection();
+                }, 1500);
+
+            }, 2000);
+        }
+
+        function showBloodyRedirection() {
+            const trapLayer = document.getElementById('final-trap-layer');
+            trapLayer.style.display = 'flex';
+            
+            const bloodText = document.getElementById('bloody-msg');
+            bloodText.style.display = 'block';
+
+            setTimeout(() => {
+                bloodText.innerHTML = "FATAL ERROR: SYSTEM FAILURE";
+                bloodText.style.fontFamily = "monospace";
+                document.body.style.animation = "glitch-anim 0.2s infinite"; 
+
+                setTimeout(() => {
+                    bloodText.style.display = 'none';
+                    document.body.style.animation = "none"; 
+                    document.body.style.background = "#111";
+                    
+                    const browser = document.getElementById('browser-window');
+                    browser.style.display = 'block';
+                    browser.classList.add('glitch-div'); 
+                    
+                    audioStatic.play(); 
+
+                    setTimeout(() => {
+                        window.location.href = redirectURL;
+                    }, 10000);
+
+                }, 1500);
+            }, 3000);
+        }
+
+        function triggerJump(imgId, audioObj) {
+            const img = document.getElementById(imgId);
+            img.style.display = 'block';
+            if(audioObj) {
+                audioObj.currentTime = 0;
+                audioObj.play();
+            }
+
+            let k = 0;
+            const flicker = setInterval(() => {
+                img.style.opacity = (k % 2 === 0) ? 1 : 0.2;
+                k++;
+                if (k > 10) {
+                    clearInterval(flicker);
+                    img.style.display = 'none';
+                }
+            }, 50);
+        }
+    </script>
+</body>
+</html>
